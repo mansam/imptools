@@ -1,0 +1,119 @@
+Planet bit flags
+244: 11110100
+232: 11101000
+208: 11010000
+161: 10010001
+144: 10001000
+128: 10000000
+127: 01111111
+88: 01011000
+32: 00010000
+1: 00000001
+
+On occupied planets:  
+Spy Sat 2 resulted in 88 -> 208
+Spy Sat resulted in 88 -> 232
+
+Persol 1 was occupied by Dribs. Flag 1, Visibility 0. Flag 1 seems to mean "visible on the map".
+Adding Survey Sat changed Flag to 244. Can now see this is an alien colony. Grey name. ??? on Cratered Planet.
+Changing the flag to 0 when the Survey Sat was present caused it to appear bugged. "" on cratered planet. "You must receive more information from your satellite to view the planet surface"
+Normally this would say "You must deploy a satellite to view the planet surface."
+1,2,4,8,16,32,88 all result in apparently same bugged display. Setting to 144 or 208 brings back "Alien Colony. ??? On Crated Planet" message.
+
+High bit seems to control whether or not the planet is on the list of planets
+
+OFFSET OF 4 BYTE NUCLEAR PLANT COST IN MAIN.EXE
+0xAEB78
+OFFSET OF 1 BYTE NUCLEAR PLANT STATIC MULTIPLIER
+0xAEB88
+
+OFFSET OF 4 BYTE FUSION PLANT COST IN MAIN.EXE
+0xAEB91
+OFFSET OF 2 BYTE FUSION PLANT WORKER COUNT
+0xAEB9F
+OFFSET OF 1 BYTE FUSION PLANT STATIC MULTIPLIER
+0xAEBA1
+Followint static multiplier is a series of byte flags indicating where the planet can be built
+
+[ price   ]                            [workers][static multiplier]
+C0 5D 00 00 00 96 00 00 00 01 A0 0F 00 00 F4 01 63 00 01 01 01 01 01 01 01
+
+40 1F 00 00 00 32 00 00 00 01 B8 0B 00 00 22 01 23 00 01 01 01 01 01 01 01
+
+1 Byte: Length of savefile name (max 26)
+26 Bytes: Savefile name
+1 Byte: null terminator?
+2 Bytes: Rank (0-5)
+2 Bytes: Year
+2 Bytes: Month
+2 Bytes: Day of Month
+2 Bytes: Hour
+2 Bytes: Minute
+Offset 2E,2F,30,31 money
+
+Offset 245CE: Last selected building
+
+Building Instance (18 Bytes):
+01: Building Number
+02: Race/Owner
+03: Power On / Off
+04: Repair On / Off
+05: Points of damage taken low byte (This is an absolute value. If this is higher than the building type's total hit points, it will be removed.)
+06: Points of damage taken high byte
+07: How much time is remaining in building construction. Percent remaining is this value divided by 2. e.g. 0x20 corresponds to 16% remaining
+08: What planet index this belongs to
+09: Building X Coordinate (Origin at top left)
+0A: Building Y Coordinate
+0B: Seems to be a special building function. For power plants it's an efficiency rating
+0C: Unknown. Usually set to 1.
+0D: Unknown
+0E: Unknown
+OF: Power draw low byte
+10: Power draw high byte
+11: Workers low byte
+12: Workers high byte
+Buildings appear to be separated by a single byte of FF
+
+Example:
+San Sterling Colony Hub
+01 01 01 00 00 00 00 44 0F 1E 37 01 00 00 00 00 C0 03
+
+Planet Definition (71 Bytes):
+1 Byte: Length of planet name
+12 Bytes: Planet name
+2 Bytes: X Coordinate
+2 Bytes: y Coordinate
+1 Byte: Surface map number (corresponds to maps in MAP.PAC)
+2 Bytes: # of Fighter 1
+2 Bytes: # of Fighter 2
+2 Bytes: # of Fighter 3
+2 Bytes: # of Fighter 4
+2 Bytes: # of Fighter 5
+2 Bytes: # of Fighter 6
+2 Bytes: # of Light Tank
+2 Bytes: # of Medium Tank
+2 Bytes: # of Heavy Tank
+2 Bytes: # of Special Tank
+4 Bytes: Apparently Unused (Always zeroed)
+2 Bytes: # of Radar Car
+2 Bytes: # of Rocket Sled
+2 Bytes: # of Heavy Rocket Sled
+1 Byte: Race
+1 Byte: Owner
+1 Byte: Planet Type
+1 Byte: Unknown bit flags related in some way to planet and colony visibility. Effects are also tied to satellite status.
+1 Byte: Visibility (0-7)
+4 Bytes: Population (Empty Planets start with a Population of (0x2710 = 10000)
+1 Byte: Rank at which this planet can appear in the Planets list.
+1 Byte: Rank at which it is possible to see this planet on the minimap or starmap.
+1 Byte: Building Index
+2 Bytes: Morale level. Starts at 400, appears to have a maximum value of around 700.
+1 Byte: Has Sat (bool)
+1 Byte: Has Spy Sat (bool)
+1 Byte: Has Spy Sat 2 (bool)
+1 Byte: Has Hubble 2 (bool)
+1 Byte: Space Station
+1 Byte: Space Station
+1 Byte: Space Station
+1 Byte: Taxation Level (0-7 in English build)
+1 Byte: Virus (bool)
