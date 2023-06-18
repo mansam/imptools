@@ -29,7 +29,7 @@ type Planet struct {
 	Car3        int
 	Race        int
 	Type        int
-	Unknown     int // still no clue what this is. After turning on cheats all planets show 208
+	Flags       int // Bit flags. Humans start at 208. Adding a spy sat 2 to a planet changes it to 208.
 	Visibility  int
 	Population  int
 	RankListed  int
@@ -48,7 +48,7 @@ type Planet struct {
 }
 
 func (r *Planet) String() string {
-	return fmt.Sprintf("%-12s \t%-25s \t%-10s \t%-6v \t%-3v \t%-4v \t%-4d \t%-4v", r.Name, labels.Owner(r.Owner), labels.Race(r.Race), r.Morale, r.Unknown, r.Car1, r.Type, r.Map)
+	return fmt.Sprintf("%-12s \t%-25s \t%-10s \t%-6v \t%-3v \t%-4v \t%-4d \t%-4v", r.Name, labels.Owner(r.Owner), labels.Race(r.Race), r.Morale, r.Flags, r.Visibility, r.Type, r.Map)
 }
 
 func ReadPlanet(f *os.File) (p Planet) {
@@ -75,7 +75,7 @@ func ReadPlanet(f *os.File) (p Planet) {
 	p.Race = reader.Btoi(reader.ReadN(f, 1))
 	p.Owner = reader.Btoi(reader.ReadN(f, 1))
 	p.Type = reader.Btoi(reader.ReadN(f, 1))
-	p.Unknown = reader.Btoi(reader.ReadN(f, 1))
+	p.Flags = reader.Btoi(reader.ReadN(f, 1))
 	p.Visibility = reader.Btoi(reader.ReadN(f, 1))
 	p.Population = reader.Btoi(reader.ReadN(f, 4))
 	p.RankListed = reader.Btoi(reader.ReadN(f, 1))

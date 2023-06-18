@@ -48,10 +48,10 @@ func main() {
 			planets = append(planets, structs.ReadPlanet(f))
 		}
 		sort.Slice(planets, func(i, j int) bool {
-			return planets[i].BuildIndex < planets[j].BuildIndex
+			return planets[i].Name < planets[j].Name
 		})
 
-		fmt.Printf("%-12s \t%-25s \t%-10s \t%-6s \t%-3s \t%-4v \t%-4s \t%-4s\n", "Name", "Owner", "Race", "Morale", "Unk5", "Car1", "Type", "Map")
+		fmt.Printf("%-12s \t%-25s \t%-10s \t%-6s \t%-3s \t%-4v \t%-4s \t%-4s\n", "Name", "Owner", "Race", "Morale", "Flag", "Vis", "Type", "Map")
 		for _, v := range planets {
 			fmt.Println(v.String())
 		}
