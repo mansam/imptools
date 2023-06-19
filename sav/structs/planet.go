@@ -1,95 +1,67 @@
 package structs
 
 import (
+	"encoding/binary"
 	"fmt"
-	"github.com/mansam/imptools/reader"
 	"github.com/mansam/imptools/sav/labels"
 	"os"
 )
 
 type Planet struct {
-	Name        string
-	Owner       int
-	X           int
-	Y           int
-	Map         int
-	Fighter1    int
-	Fighter2    int
-	Fighter3    int
-	Fighter4    int
-	Fighter5    int
-	Fighter6    int
-	Tank1       int
-	Tank2       int
-	Tank3       int
-	Tank4       int
-	Unused      int // likely unused vehicle slots
-	Car1        int
-	Car2        int
-	Car3        int
-	Race        int
-	Type        int
-	Flags       int // Bit flags. Humans start at 208. Adding a spy sat 2 to a planet changes it to 208.
-	Visibility  int
-	Population  int
-	RankListed  int
-	RankVisible int
-	BuildIndex  int
-	Morale      int
+	NameLength  uint8
+	Name_       [12]byte
+	X           int16
+	Y           int16
+	Map         uint8
+	Fighter1    uint16
+	Fighter2    uint16
+	Fighter3    uint16
+	Fighter4    uint16
+	Fighter5    uint16
+	Fighter6    uint16
+	Tank1       uint16
+	Tank2       uint16
+	Tank3       uint16
+	Tank4       uint16
+	Unused      uint32 // likely unused vehicle slots
+	Car1        uint16
+	Car2        uint16
+	Car3        uint16
+	Race        uint8
+	Owner       uint8
+	Type        uint8
+	Flags       uint8 // Bit flags. Humans start at 208. Adding a spy sat 2 to a planet changes it to 208.
+	Visibility  uint8
+	Population  uint32
+	RankListed  uint8
+	RankVisible uint8
+	BuildIndex  uint8
+	Morale      uint16
 	HasSat      bool
 	HasSpySat   bool
 	HasSpySat2  bool
 	HasHubble2  bool
-	Orbit1      int
-	Orbit2      int
-	Orbit3      int
-	TaxLevel    int
+	Orbit1      uint8
+	Orbit2      uint8
+	Orbit3      uint8
+	TaxLevel    uint8
 	Virus       bool
 }
 
-func (r *Planet) String() string {
-	return fmt.Sprintf("%-12s \t%-25s \t%-10s \t%-6v \t%-3v \t%-4v \t%-4d \t%-4v", r.Name, labels.Owner(r.Owner), labels.Race(r.Race), r.Morale, r.Flags, r.Visibility, r.Type, r.Map)
+func (r Planet) Name() string {
+	return string(r.Name_[:r.NameLength])
+}
+
+func (r Planet) String() string {
+	return fmt.Sprintf("%-12s \t%-24s \t%-10s \t%-6v \t%08b \t%-4v \t%-4d \t%-4v", r.Name(), labels.Owner(r.Owner), labels.Race(r.Race), r.Morale, r.Flags, r.Visibility, r.Type, r.Map)
+}
+
+func WritePlanet(p Planet, f *os.File) (err error) {
+	err = binary.Write(f, binary.LittleEndian, p)
+	return
 }
 
 func ReadPlanet(f *os.File) (p Planet) {
-	nameLen := reader.Btoi(reader.ReadN(f, 1))
-	rawName := reader.ReadN(f, PlanetNameLen)
-	p.Name = string(rawName[:nameLen])
-	p.X = reader.Btoi(reader.ReadN(f, 2))
-	p.Y = reader.Btoi(reader.ReadN(f, 2))
-	p.Map = reader.Btoi(reader.ReadN(f, 1))
-	p.Fighter1 = reader.Btoi(reader.ReadN(f, 2))
-	p.Fighter2 = reader.Btoi(reader.ReadN(f, 2))
-	p.Fighter3 = reader.Btoi(reader.ReadN(f, 2))
-	p.Fighter4 = reader.Btoi(reader.ReadN(f, 2))
-	p.Fighter5 = reader.Btoi(reader.ReadN(f, 2))
-	p.Fighter6 = reader.Btoi(reader.ReadN(f, 2))
-	p.Tank1 = reader.Btoi(reader.ReadN(f, 2))
-	p.Tank2 = reader.Btoi(reader.ReadN(f, 2))
-	p.Tank3 = reader.Btoi(reader.ReadN(f, 2))
-	p.Tank4 = reader.Btoi(reader.ReadN(f, 2))
-	p.Unused = reader.Btoi(reader.ReadN(f, 4))
-	p.Car1 = reader.Btoi(reader.ReadN(f, 2))
-	p.Car2 = reader.Btoi(reader.ReadN(f, 2))
-	p.Car3 = reader.Btoi(reader.ReadN(f, 2))
-	p.Race = reader.Btoi(reader.ReadN(f, 1))
-	p.Owner = reader.Btoi(reader.ReadN(f, 1))
-	p.Type = reader.Btoi(reader.ReadN(f, 1))
-	p.Flags = reader.Btoi(reader.ReadN(f, 1))
-	p.Visibility = reader.Btoi(reader.ReadN(f, 1))
-	p.Population = reader.Btoi(reader.ReadN(f, 4))
-	p.RankListed = reader.Btoi(reader.ReadN(f, 1))
-	p.RankVisible = reader.Btoi(reader.ReadN(f, 1))
-	p.BuildIndex = reader.Btoi(reader.ReadN(f, 1))
-	p.Morale = reader.Btoi(reader.ReadN(f, 2))
-	p.HasSat = reader.Bool(reader.ReadN(f, 1)[0])
-	p.HasSpySat = reader.Bool(reader.ReadN(f, 1)[0])
-	p.HasSpySat2 = reader.Bool(reader.ReadN(f, 1)[0])
-	p.HasHubble2 = reader.Bool(reader.ReadN(f, 1)[0])
-	p.Orbit1 = reader.Btoi(reader.ReadN(f, 1))
-	p.Orbit2 = reader.Btoi(reader.ReadN(f, 1))
-	p.Orbit3 = reader.Btoi(reader.ReadN(f, 1))
-	p.TaxLevel = reader.Btoi(reader.ReadN(f, 1))
-	p.Virus = reader.Bool(reader.ReadN(f, 1)[0])
+	_ = binary.Read(f, binary.LittleEndian, &p)
 	return
 }

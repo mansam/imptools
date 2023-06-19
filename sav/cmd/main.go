@@ -48,12 +48,12 @@ func main() {
 			planets = append(planets, structs.ReadPlanet(f))
 		}
 		sort.Slice(planets, func(i, j int) bool {
-			return planets[i].Name < planets[j].Name
+			return planets[i].Name() < planets[j].Name()
 		})
 
-		fmt.Printf("%-12s \t%-25s \t%-10s \t%-6s \t%-3s \t%-4v \t%-4s \t%-4s\n", "Name", "Owner", "Race", "Morale", "Flag", "Vis", "Type", "Map")
+		fmt.Printf("%-12s \t%-24s \t%-10s \t%-6s \t%-8s \t%-4v \t%-4s \t%-4s\n", "Name", "Owner", "Race", "Morale", "Flag", "Vis", "Type", "Map")
 		for _, v := range planets {
-			fmt.Println(v.String())
+			fmt.Println(v)
 		}
 	}
 
@@ -66,17 +66,18 @@ func main() {
 			buildings = append(buildings, structs.ReadBuilding(f))
 			f.Seek(1, 1)
 		}
-		fmt.Printf("%-12s %-25s %-20s %-9s %-9s %-9s %-9s %-9s %-9s %-9s %-9s %-9s\n",
+		fmt.Printf("%-12s %-25s %-20s %-10s %-9s %-9s %-9s %-9s %-10s %-12s %-9s %-9s %-9s\n",
 			"Planet",
 			"Owner",
 			"Building",
+			"Coords",
 			"Powered",
 			"Repairing",
 			"Damage",
-			"%Complete",
+			"Remaining",
 			"Efficiency",
-			"Flag1",
-			"Short1",
+			"Operational",
+			"Unused",
 			"KW/h",
 			"Workers")
 		for _, v := range buildings {
@@ -98,7 +99,7 @@ func main() {
 			"Unknown2",
 		)
 		for i, v := range technologies {
-			fmt.Printf("%-18s \t%s\n", labels.TechnologyName(i+1), v.String())
+			fmt.Printf("%-18s \t%s\n", labels.TechnologyName(uint8(i+1)), v.String())
 		}
 	}
 }

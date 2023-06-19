@@ -1,6 +1,6 @@
 package labels
 
-func Owner(o int) string {
+func Owner(o uint8) string {
 	var owners = []string{
 		"",
 		"Galactic Empire",
@@ -17,7 +17,7 @@ func Owner(o int) string {
 	return owners[o]
 }
 
-func Race(r int) string {
+func Race(r uint8) string {
 	var races = []string{
 		"",
 		"Human",
@@ -32,7 +32,7 @@ func Race(r int) string {
 	return races[r]
 }
 
-func BuildingName(b int) string {
+func BuildingName(b uint8) string {
 	var buildings = []string{
 		"",
 		"Colony Hub",
@@ -82,7 +82,7 @@ func BuildingName(b int) string {
 	return buildings[b]
 }
 
-func PlanetName(p int) string {
+func PlanetName(p uint8) string {
 	planets := []string{
 		"",
 		"Outer  4",
@@ -194,7 +194,7 @@ func PlanetName(p int) string {
 	return planets[p]
 }
 
-func TechnologyName(t int) string {
+func TechnologyName(t uint8) string {
 	technologies := []string{
 		"",
 		"Fighter 1",
