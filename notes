@@ -72,7 +72,7 @@ Building Instance (18 Bytes):
 09: Building X Coordinate (Origin at top left)
 0A: Building Y Coordinate
 0B: Seems to be a special building function. For power plants it's an efficiency rating
-0C: Unknown. Usually set to 1.
+0C: Operational (bool)
 0D: Unknown
 0E: Unknown
 OF: Power draw low byte
