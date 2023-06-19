@@ -33,13 +33,13 @@ OFFSET OF 2 BYTE FUSION PLANT WORKER COUNT
 0xAEB9F
 OFFSET OF 1 BYTE FUSION PLANT STATIC MULTIPLIER
 0xAEBA1
-Followint static multiplier is a series of byte flags indicating where the planet can be built
+Following static multiplier is a series of flags indicating which planet types the structure can be built on
 
 
 Offset of Colony Hub (Building 01) 0xAEB14
 43 Human buildings
 
-Colony Hub     v-- build time v-- hit points?  
+Colony Hub     v-- build time v-- hit points?
 40 9C 00 00 00 C8 00 00 00 00 10 27 00 00 C0 03 78 00 01 01 01 01 01 01 01
 
 [ price   ]                            [workers][static multiplier]
