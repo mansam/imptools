@@ -1,5 +1,36 @@
 package labels
 
+func Month(m uint16) string {
+	var months = []string{
+		"",
+		"January",
+		"February",
+		"March",
+		"April",
+		"May",
+		"June",
+		"July",
+		"August",
+		"September",
+		"October",
+		"November",
+		"December",
+	}
+	return months[m]
+}
+
+func Rank(r uint16) string {
+	var ranks = []string{
+		"",
+		"Lieutenant",
+		"Captain",
+		"Commander",
+		"Admiral",
+		"Grand Admiral",
+	}
+	return ranks[r]
+}
+
 func Owner(o uint8) string {
 	var owners = []string{
 		"",

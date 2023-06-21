@@ -27,15 +27,77 @@ func main() {
 	}
 	defer f.Close()
 
-	//var outputHeader bool
+	var outputHeader bool
 	var outputPlanets bool
 	var outputBuildings bool
 	var outputTech bool
-	//var outputFleets bool
+	var outputFleets bool
+	var outputShips bool
+	outputHeader = strings.Contains(os.Args[2], "h")
 	outputPlanets = strings.Contains(os.Args[2], "p")
 	outputBuildings = strings.Contains(os.Args[2], "b")
 	outputTech = strings.Contains(os.Args[2], "t")
-	//outputFleets = strings.Contains(os.Args[2], "f")
+	outputFleets = strings.Contains(os.Args[2], "f")
+	outputShips = strings.Contains(os.Args[2], "s")
+
+	if outputHeader {
+		fmt.Println(structs.ReadHeader(f))
+	}
+
+	if outputFleets {
+		_, err = f.Seek(structs.FleetsOffset, 0)
+		if err != nil {
+			panic(err)
+		}
+
+		fmt.Printf("%-3s %-12s %-16s %-4s %-4s %-4s %-4s %-4s %-4s %-4s %-4s %-4s %-4s %-4s %-4s %-4s %-8s %-8s %-8s\n",
+			"#",
+			"Name",
+			"Coords",
+			"F1",
+			"F2",
+			"F3",
+			"F4",
+			"F5",
+			"F6",
+			"T1",
+			"T2",
+			"T3",
+			"T4",
+			"C1",
+			"C2",
+			"C3",
+			"Fighters",
+			"Vehicles",
+			"CarryCap")
+		fleetCount := 0
+		for {
+			fleetCount++
+			fleet := structs.ReadFleet(f)
+			if fleet.NameLength < 1 || fleet.NameLength > 12 {
+				break
+			}
+			fmt.Printf("%-3d %s\n", fleetCount, fleet)
+		}
+	}
+
+	if outputShips {
+		//numShips := reader.Btoi(reader.ReadNAt(f, 1, structs.NumShipsOffset))
+
+		_, err = f.Seek(structs.ShipsOffset, 0)
+		if err != nil {
+			panic(err)
+		}
+		shipCount := 0
+		for { // i := 0; i < numShips; i++ {
+			shipCount++
+			ship := structs.ReadShip(f)
+			if ship.NameLength < 1 || ship.NameLength > 12 {
+				break
+			}
+			fmt.Printf("%-3d %s\n", shipCount, ship)
+		}
+	}
 
 	_, err = f.Seek(structs.PlanetDefOffset, 0)
 	if err != nil {
@@ -51,7 +113,7 @@ func main() {
 			return planets[i].Name() < planets[j].Name()
 		})
 
-		fmt.Printf("%-12s \t%-24s \t%-10s \t%-6s \t%-8s \t%-4v \t%-4s \t%-4s\n", "Name", "Owner", "Race", "Morale", "Flag", "Vis", "Type", "Map")
+		fmt.Printf("%-12s \t%-24s \t%-10s \t%-16s \t%-6s \t%-8s \t%-4v \t%-4s \t%-4s\n", "Name", "Owner", "Race", "Coords", "Morale", "Flag", "Vis", "Type", "Map")
 		for _, v := range planets {
 			fmt.Println(v)
 		}

@@ -23,7 +23,7 @@ type Planet struct {
 	Tank2       uint16
 	Tank3       uint16
 	Tank4       uint16
-	Unused      uint32 // likely unused vehicle slots
+	Unused      uint32 // Unused vehicle slots.
 	Car1        uint16
 	Car2        uint16
 	Car3        uint16
@@ -53,7 +53,8 @@ func (r Planet) Name() string {
 }
 
 func (r Planet) String() string {
-	return fmt.Sprintf("%-12s \t%-24s \t%-10s \t%-6v \t%08b \t%-4v \t%-4d \t%-4v", r.Name(), labels.Owner(r.Owner), labels.Race(r.Race), r.Morale, r.Flags, r.Visibility, r.Type, r.Map)
+	coords := fmt.Sprintf("(%d, %d)", r.X, r.Y)
+	return fmt.Sprintf("%-12s \t%-24s \t%-10s \t%-16s \t%-6v \t%08b \t%-4v \t%-4d \t%-4v", r.Name(), labels.Owner(r.Owner), labels.Race(r.Race), coords, r.Morale, r.Flags, r.Visibility, r.Type, r.Map)
 }
 
 func WritePlanet(p Planet, f *os.File) (err error) {
