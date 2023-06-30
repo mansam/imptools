@@ -44,6 +44,8 @@ func Owner(o uint8) string {
 		"Ecalep Republic",
 		"Alliance of Free Traders",
 		"Free Nations Society",
+		"Pirates",
+		"Traders",
 	}
 	return owners[o]
 }
@@ -91,7 +93,7 @@ func BuildingName(b uint8) string {
 		"Hospital",
 		"Police Station",
 		"Fire Brigade",
-		"Radar Telescope",
+		"Slot2 Telescope",
 		"Field Telescope",
 		"Phased Telescope",
 		"Bunker",
@@ -225,6 +227,29 @@ func PlanetName(p uint8) string {
 	return planets[p]
 }
 
+// TechnologyName
+// 1. Spaceships
+//  1. Fighters
+//  2. Cruisers
+//  3. Flagships
+//  4. Satellites
+//  5. Space Bases
+//
+// 2. Equipment
+//  1. Hyperdrives
+//  2. Modules
+//  3. Radars
+//  4. Shields
+//
+// 3. Weapons
+//  1. Lasers
+//  2. Guns
+//  3. Missiles/Bombs
+//  4. Tanks
+//  5. Vehicles
+//
+// 4. Buildings
+// //
 func TechnologyName(t uint8) string {
 	technologies := []string{
 		"",
@@ -302,7 +327,7 @@ func TechnologyName(t uint8) string {
 		"",
 		"Bomb v1.0",
 		"Bomb v2.0",
-		"VirusBomb",
+		"Virus Bomb",
 		"Missile v1.0",
 		"Missile v2.0",
 		"Mul-Head Missile",
@@ -312,7 +337,7 @@ func TechnologyName(t uint8) string {
 		"Behemoth",
 		"",
 		"",
-		"Radar Car",
+		"Slot2 Car",
 		"Rocked Sled",
 		"Heavy Rocket Sled",
 		"",
@@ -324,8 +349,8 @@ func TechnologyName(t uint8) string {
 		"",
 		"",
 		"",
-		"Invasion Shield",
-		"Hyper Shield",
+		"Inversion Shield",
+		"HyperShield",
 		"Fortress",
 		"Stronghold",
 		"Bunker",

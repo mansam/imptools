@@ -35,8 +35,8 @@ type Technology struct {
 
 func (r Technology) String() string {
 	return fmt.Sprintf(
-		"%-8d \t%-8d",
-		r.Unknown1, r.Unknown2)
+		"%d %d %d %d %d %d %d %d %d %d",
+		r.State, r.Count, r.Price, r.Resale, r.Producible, r.Civil, r.Mechanical, r.Computer, r.AI, r.Military)
 }
 
 func ReadTechnology(f *os.File) (t Technology) {

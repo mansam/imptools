@@ -3,6 +3,7 @@ package structs
 import (
 	"encoding/binary"
 	"fmt"
+	"github.com/mansam/imptools/sav/labels"
 	"os"
 )
 
@@ -10,7 +11,13 @@ import (
 type Fleet struct {
 	NameLength    uint8
 	Name_         [12]byte
-	Unknown       [9]byte
+	Owner         uint8
+	Color         uint8 // affects appearance of empire ships (yellow w/ blue, yellow /w red, etc)
+	Unknown       [2]byte
+	Controllable  uint8
+	Visible       uint8
+	Alert         uint8
+	Unknown0      [4]byte
 	X             uint16
 	Unknown1      uint16
 	Y             uint16
@@ -25,7 +32,7 @@ type Fleet struct {
 	Tank2         int16
 	Tank3         int16
 	Tank4         int16
-	Unused        int32 // Unused vehicle slots, always 0. These are counted against fleet capacity but are otherwise ignored.
+	Unused        [4]byte // Unused vehicle slots, always 0. These are counted against fleet capacity but are otherwise ignored.
 	Car1          int16
 	Car2          int16
 	Car3          int16
@@ -67,10 +74,44 @@ func (r Fleet) String() string {
 
 // Offset: 0x2261 (51 bytes)
 type Ship struct {
-	NameLength uint8
-	Name_      [12]byte
-	Unknown    [37]byte
-	Fleet      uint8
+	NameLength           uint8
+	Name_                [12]byte
+	Owner                uint8
+	TechSubcategory      uint8
+	TechSubcategoryIndex uint8
+	Slot1                uint8
+	Slot2                uint8
+	Slot3                uint8
+	Slot4                uint8
+	Slot5                uint8
+	Slot6                uint8
+	Slot7                uint8
+	Slot8                uint8
+	Slot9                uint8
+	Slot10               uint8
+	Slot1Count           uint8
+	Slot2Count           uint8
+	Slot3Count           uint8
+	Slot4Count           uint8
+	Slot5Count           uint8
+	Slot6Count           uint8
+	Slot7Count           uint8
+	Slot8Count           uint8
+	Slot9Count           uint8
+	Slot10Count          uint8
+	Damage1              uint8
+	Damage2              uint8
+	Damage3              uint8
+	Damage4              uint8
+	Damage5              uint8
+	Damage6              uint8
+	Damage7              uint8
+	Damage8              uint8
+	Damage9              uint8
+	Damage10             uint8
+	GroundForces         uint16
+	Kills                uint16
+	Fleet                uint8
 	/*
 		08 54 72 61 64 65 72 20 31 62 62 48 43 0C 02 01
 		01 01 01 01 01 01 00 00 00 00 01 01 01 01 01 01
@@ -79,13 +120,127 @@ type Ship struct {
 	*/
 }
 
+//
+// Offset 0xa9078 in MAIN.EXE: Possible start of ship equipment slot definitions
+//
+// Human Flagship 1 slots
+// Module
+// Radar
+// Guns
+// Missiles
+// Bombs
+// Shield
+// Lasers
+// Hyperdrive
+
 func (r Ship) String() string {
-	return fmt.Sprintf("%-12s %-3d", r.Name(), r.Fleet)
+	if r.TechSubcategory == 3 {
+		return fmt.Sprintf("%-12s %-3d %-24s %-16s %-30s %-30s %-30s %-30s %-30s %-30s %-30s %-30s %2d %2d",
+			r.Name(),
+			r.Fleet,
+			labels.Owner(r.Owner),
+			r.Class(),
+			// only accurate for human Flagship 1
+			Slot(Module(r.Slot1), r.Slot1Count, r.Damage1),
+			Slot(Radar(r.Slot2), r.Slot2Count, r.Damage2),
+			Slot(Gun(r.Slot3), r.Slot3Count, r.Damage3),
+			Slot(Missile(r.Slot4), r.Slot4Count, r.Damage4),
+			Slot(Missile(r.Slot5), r.Slot5Count, r.Damage5),
+			Slot(Shield(r.Slot6), r.Slot6Count, r.Damage6),
+			Slot(Laser(r.Slot7), r.Slot7Count, r.Damage7),
+			Slot(Hyperdrive(r.Slot8), r.Slot8Count, r.Damage8),
+			r.GroundForces,
+			r.Kills)
+	} else if r.TechSubcategory == 2 {
+		return fmt.Sprintf("%-12s %-3d %-24s %-20s %-20s %-20s %-20s %-20s %-20s %-20s %x %x %x %x",
+			r.Name(),
+			r.Fleet,
+			labels.Owner(r.Owner),
+			r.Class(),
+			// only accurate for human cruiser 2
+			Slot(Shield(r.Slot1), r.Slot1Count, r.Damage1),
+			Slot(Gun(r.Slot2), r.Slot2Count, r.Damage2),
+			Slot(Laser(r.Slot3), r.Slot3Count, r.Damage3),
+			Slot(Gun(r.Slot4), r.Slot4Count, r.Damage4),
+			Slot(Radar(r.Slot5), r.Slot5Count, r.Damage5),
+			Slot(Hyperdrive(r.Slot6), r.Slot6Count, r.Damage6),
+			r.Slot7,
+			r.Slot8,
+			r.Slot9,
+			r.Slot10)
+	} else {
+		return r.Name()
+	}
 }
 
 func (r Ship) Name() string {
 	return string(r.Name_[:r.NameLength])
 }
+
+func (r Ship) Class() string {
+	return labels.TechnologyName((r.TechSubcategory-1)*6 + r.TechSubcategoryIndex)
+}
+
+func Slot(s string, c uint8, d uint8) string {
+	if c == 0 {
+		return "<empty>"
+	}
+	return fmt.Sprintf("%s (%d) (%3d%%)", s, c, uint8(float32(d)/float32(255)*100))
+}
+
+func Missile(m uint8) string {
+	if m == 0 {
+		return "n/a"
+	}
+	return labels.TechnologyName(72 + m)
+}
+
+func Laser(m uint8) string {
+	if m == 0 {
+		return "n/a"
+	}
+	return labels.TechnologyName(60 + m)
+}
+
+func Gun(m uint8) string {
+	if m == 0 {
+		return "n/a"
+	}
+	return labels.TechnologyName(66 + m)
+}
+
+func Radar(r uint8) string {
+	if r == 0 {
+		return "n/a"
+	}
+	return labels.TechnologyName(42 + r)
+}
+
+func Module(m uint8) string {
+	if m == 0 {
+		return "n/a"
+	}
+	return labels.TechnologyName(36 + m)
+}
+
+func Hyperdrive(h uint8) string {
+	if h == 0 {
+		return "n/a"
+	}
+	return labels.TechnologyName(30 + h)
+}
+
+func Shield(s uint8) string {
+	if s == 0 {
+		return "n/a"
+	}
+	return labels.TechnologyName(48 + s)
+}
+
+//
+//func (r Ship) ShieldName() string {
+//	return labels.TechnologyName(2*4*6+r.Shield) + fmt.Sprintf(" (%d)", r.Shield)
+//}
 
 func ReadShip(f *os.File) (s Ship) {
 	_ = binary.Read(f, binary.LittleEndian, &s)

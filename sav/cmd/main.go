@@ -45,6 +45,8 @@ func main() {
 	}
 
 	if outputFleets {
+		numFleets := reader.Btoi(reader.ReadNAt(f, 2, structs.NumFleetsOffset))
+
 		_, err = f.Seek(structs.FleetsOffset, 0)
 		if err != nil {
 			panic(err)
@@ -69,33 +71,23 @@ func main() {
 			"C3",
 			"Fighters",
 			"Vehicles",
-			"CarryCap")
-		fleetCount := 0
-		for {
-			fleetCount++
+			"Unknown")
+		for i := 0; i < numFleets; i++ {
 			fleet := structs.ReadFleet(f)
-			if fleet.NameLength < 1 || fleet.NameLength > 12 {
-				break
-			}
-			fmt.Printf("%-3d %s\n", fleetCount, fleet)
+			fmt.Printf("%-3d %s\n", i+1, fleet)
 		}
 	}
 
 	if outputShips {
-		//numShips := reader.Btoi(reader.ReadNAt(f, 1, structs.NumShipsOffset))
+		numShips := reader.Btoi(reader.ReadNAt(f, 2, structs.NumShipsOffset))
 
 		_, err = f.Seek(structs.ShipsOffset, 0)
 		if err != nil {
 			panic(err)
 		}
-		shipCount := 0
-		for { // i := 0; i < numShips; i++ {
-			shipCount++
+		for i := 0; i < numShips; i++ {
 			ship := structs.ReadShip(f)
-			if ship.NameLength < 1 || ship.NameLength > 12 {
-				break
-			}
-			fmt.Printf("%-3d %s\n", shipCount, ship)
+			fmt.Printf("%-3d %s\n", i+1, ship)
 		}
 	}
 
@@ -158,7 +150,7 @@ func main() {
 			"%-18s \t%-7s \t%-7s\n",
 			"Name",
 			"Unknown1",
-			"Unknown2",
+			"Unknown4",
 		)
 		for i, v := range technologies {
 			fmt.Printf("%-18s \t%s\n", labels.TechnologyName(uint8(i+1)), v.String())

@@ -13,4 +13,7 @@ const TechnologyOffset = 0x10f04
 const NumTechnologies = 120
 const ShipsOffset = 0x2261
 const FleetsOffset = 0xea53
-const NumShipsOffset = 0x0f58
+
+// const NumShipsOffset = 0x0f58
+const NumShipsOffset = 0x2259
+const NumFleetsOffset = 0x225b

@@ -54,7 +54,7 @@ func (r Planet) Name() string {
 
 func (r Planet) String() string {
 	coords := fmt.Sprintf("(%d, %d)", r.X, r.Y)
-	return fmt.Sprintf("%-12s \t%-24s \t%-10s \t%-16s \t%-6v \t%08b \t%-4v \t%-4d \t%-4v", r.Name(), labels.Owner(r.Owner), labels.Race(r.Race), coords, r.Morale, r.Flags, r.Visibility, r.Type, r.Map)
+	return fmt.Sprintf("%-12s \t%-24s \t%-10s \t%-16s \t%-6v \t%08b \t%-4v \t%-4d \t%-4v %d", r.Name(), labels.Owner(r.Owner), labels.Race(r.Race), coords, r.Morale, r.Flags, r.Visibility, r.Type, r.Map, r.TaxLevel)
 }
 
 func WritePlanet(p Planet, f *os.File) (err error) {
