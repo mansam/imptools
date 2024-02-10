@@ -21,7 +21,11 @@ var (
 	OutputShips     bool
 )
 
-func init() {
+// Read IG save files.
+func main() {
+	if len(os.Args) != 3 {
+		panic(fmt.Sprintf("usage: %s savefile flags", os.Args[0]))
+	}
 	SaveFile = os.Args[1]
 	OutputHeader = strings.Contains(os.Args[2], "h")
 	OutputPlanets = strings.Contains(os.Args[2], "p")
@@ -29,13 +33,7 @@ func init() {
 	OutputTech = strings.Contains(os.Args[2], "t")
 	OutputFleets = strings.Contains(os.Args[2], "f")
 	OutputShips = strings.Contains(os.Args[2], "s")
-}
 
-// Read IG save files.
-func main() {
-	if len(os.Args) != 3 {
-		panic(fmt.Sprintf("usage: %s savefile flags", os.Args[0]))
-	}
 	f, err := os.Open(SaveFile)
 	if err != nil {
 		panic(err)

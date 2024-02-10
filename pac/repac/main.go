@@ -9,17 +9,19 @@ import (
 	"path"
 )
 
+var (
+	InputDirectory string
+	OutputFilePath string
+)
+
 func main() {
 	if len(os.Args) != 3 {
 		panic(fmt.Sprintf("usage: %s unpacked/ packed", os.Args[0]))
 	}
-	unpackedFileDir := os.Args[1]
-	outfile, err := os.Create(os.Args[2])
-	if err != nil {
-		panic(err)
-	}
-	defer outfile.Close()
-	entries, err := os.ReadDir(unpackedFileDir)
+	InputDirectory = os.Args[1]
+	OutputFilePath = os.Args[2]
+
+	entries, err := os.ReadDir(InputDirectory)
 	if err != nil {
 		panic(err)
 	}
@@ -72,7 +74,7 @@ func main() {
 			// only pack files in the root
 			continue
 		}
-		entryFileName := path.Join(unpackedFileDir, entry.Name())
+		entryFileName := path.Join(InputDirectory, entry.Name())
 		bytes, rErr := os.ReadFile(entryFileName)
 		if rErr != nil {
 			panic(err)
@@ -91,6 +93,12 @@ func main() {
 		data = append(data, bytes...)
 		headers = append(headers, header)
 	}
+	// begin writing archive to disk
+	outfile, err := os.Create(OutputFilePath)
+	if err != nil {
+		panic(err)
+	}
+	defer outfile.Close()
 	err = binary.Write(outfile, binary.LittleEndian, uint16(len(headers)))
 	if err != nil {
 		panic(err)

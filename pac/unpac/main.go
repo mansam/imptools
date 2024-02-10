@@ -7,19 +7,25 @@ import (
 	"os"
 )
 
+var (
+	InputFilePath   string
+	OutputDirectory string
+)
+
 func main() {
 	if len(os.Args) != 3 {
 		panic(fmt.Sprintf("usage: %s packed unpacked/", os.Args[0]))
 	}
-	filepath := os.Args[1]
-	outpath := os.Args[2]
-	f, err := os.Open(filepath)
+	InputFilePath = os.Args[1]
+	OutputDirectory = os.Args[2]
+
+	f, err := os.Open(InputFilePath)
 	if err != nil {
 		panic(err)
 	}
 	defer f.Close()
 
-	err = os.Mkdir(outpath, 0755)
+	err = os.Mkdir(OutputDirectory, 0755)
 	if err != nil {
 		panic(err)
 	}
@@ -39,7 +45,7 @@ func main() {
 	for i := 0; i < entries; i++ {
 		entry := pac.ReadHeaderEntry(f)
 		fmt.Println("\t", entry)
-		err = pac.Unpack(f, entry, outpath)
+		err = pac.Unpack(f, entry, OutputDirectory)
 		if err != nil {
 			panic(err)
 		}
