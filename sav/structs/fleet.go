@@ -192,55 +192,50 @@ func Missile(m uint8) string {
 	if m == 0 {
 		return "n/a"
 	}
-	return labels.TechnologyName(72 + m)
+	return labels.TechnologyName(TechMissiles + m)
 }
 
 func Laser(m uint8) string {
 	if m == 0 {
 		return "n/a"
 	}
-	return labels.TechnologyName(60 + m)
+	return labels.TechnologyName(TechLasers + m)
 }
 
 func Gun(m uint8) string {
 	if m == 0 {
 		return "n/a"
 	}
-	return labels.TechnologyName(66 + m)
+	return labels.TechnologyName(TechGuns + m)
 }
 
 func Radar(r uint8) string {
 	if r == 0 {
 		return "n/a"
 	}
-	return labels.TechnologyName(42 + r)
+	return labels.TechnologyName(TechRadars + r)
 }
 
 func Module(m uint8) string {
 	if m == 0 {
 		return "n/a"
 	}
-	return labels.TechnologyName(36 + m)
+	return labels.TechnologyName(TechModules + m)
 }
 
 func Hyperdrive(h uint8) string {
 	if h == 0 {
 		return "n/a"
 	}
-	return labels.TechnologyName(30 + h)
+	return labels.TechnologyName(TechHyperdrives + h)
 }
 
 func Shield(s uint8) string {
 	if s == 0 {
 		return "n/a"
 	}
-	return labels.TechnologyName(48 + s)
+	return labels.TechnologyName(TechShields + s)
 }
-
-//
-//func (r Ship) ShieldName() string {
-//	return labels.TechnologyName(2*4*6+r.Shield) + fmt.Sprintf(" (%d)", r.Shield)
-//}
 
 func ReadShip(f *os.File) (s Ship) {
 	_ = binary.Read(f, binary.LittleEndian, &s)

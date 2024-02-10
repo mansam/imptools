@@ -1,5 +1,13 @@
 package labels
 
+func Difficulty(d uint8) string {
+	var difficulty = []string{
+		"Normal",
+		"Hard",
+	}
+	return difficulty[d]
+}
+
 func Month(m uint16) string {
 	var months = []string{
 		"",
@@ -19,6 +27,7 @@ func Month(m uint16) string {
 	return months[m]
 }
 
+// Rank byte to name.
 func Rank(r uint16) string {
 	var ranks = []string{
 		"",
@@ -42,14 +51,15 @@ func Owner(o uint8) string {
 		"Sullep Empire",
 		"Dargslan Kingdom",
 		"Ecalep Republic",
-		"Alliance of Free Traders",
-		"Free Nations Society",
-		"Pirates",
-		"Traders",
+		"Alliance of Free Traders", // humans
+		"Free Nations Society",     // humans
+		"Pirates",                  // humans
+		"Traders",                  // humans
 	}
 	return owners[o]
 }
 
+// Race converts race byte to proper name.
 func Race(r uint8) string {
 	var races = []string{
 		"",
@@ -93,7 +103,7 @@ func BuildingName(b uint8) string {
 		"Hospital",
 		"Police Station",
 		"Fire Brigade",
-		"Slot2 Telescope",
+		"Radar Telescope",
 		"Field Telescope",
 		"Phased Telescope",
 		"Bunker",
@@ -228,6 +238,7 @@ func PlanetName(p uint8) string {
 }
 
 // TechnologyName
+// (Category and Subcategory)
 // 1. Spaceships
 //  1. Fighters
 //  2. Cruisers
@@ -337,8 +348,8 @@ func TechnologyName(t uint8) string {
 		"Behemoth",
 		"",
 		"",
-		"Slot2 Car",
-		"Rocked Sled",
+		"Radar Car",
+		"Rocket Sled",
 		"Heavy Rocket Sled",
 		"",
 		"",

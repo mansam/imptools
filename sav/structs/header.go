@@ -10,7 +10,7 @@ import (
 type Header struct {
 	NameLength uint8
 	SaveName   [26]byte
-	Unknown    byte
+	Difficulty byte
 	Rank       uint16
 	Year       uint16
 	Month      uint16
@@ -22,11 +22,16 @@ type Header struct {
 }
 
 func (r Header) String() string {
-	return fmt.Sprintf("%-30s %-2x %-13s %s %x %d", r.SaveName[:r.NameLength], r.Unknown, labels.Rank(r.Rank), r.Date(), r.Unknown2, r.Money)
+	return fmt.Sprintf("%-30s %-2x %-13s %s %x %d", r.SaveName[:r.NameLength], r.Difficulty, labels.Rank(r.Rank), r.Date(), r.Unknown2, r.Money)
 }
 
 func (r Header) Date() string {
 	return fmt.Sprintf("%s %d %04d %02d:%02d", labels.Month(r.Month), r.Day, r.Year, r.Hour, r.Minute)
+}
+
+func WriteHeader(h Header, f *os.File) (err error) {
+	err = binary.Write(f, binary.LittleEndian, h)
+	return
 }
 
 func ReadHeader(f *os.File) (h Header) {

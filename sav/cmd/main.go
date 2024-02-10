@@ -10,9 +10,25 @@ import (
 	"strings"
 )
 
-func ReadHeader(f *os.File) {
-	f.Seek(structs.HeaderOffset, 0)
+// Flags
+var (
+	SaveFile        string
+	OutputHeader    bool
+	OutputPlanets   bool
+	OutputBuildings bool
+	OutputTech      bool
+	OutputFleets    bool
+	OutputShips     bool
+)
 
+func init() {
+	SaveFile = os.Args[1]
+	OutputHeader = strings.Contains(os.Args[2], "h")
+	OutputPlanets = strings.Contains(os.Args[2], "p")
+	OutputBuildings = strings.Contains(os.Args[2], "b")
+	OutputTech = strings.Contains(os.Args[2], "t")
+	OutputFleets = strings.Contains(os.Args[2], "f")
+	OutputShips = strings.Contains(os.Args[2], "s")
 }
 
 // Read IG save files.
@@ -20,31 +36,17 @@ func main() {
 	if len(os.Args) != 3 {
 		panic(fmt.Sprintf("usage: %s savefile flags", os.Args[0]))
 	}
-	filepath := os.Args[1]
-	f, err := os.Open(filepath)
+	f, err := os.Open(SaveFile)
 	if err != nil {
 		panic(err)
 	}
 	defer f.Close()
 
-	var outputHeader bool
-	var outputPlanets bool
-	var outputBuildings bool
-	var outputTech bool
-	var outputFleets bool
-	var outputShips bool
-	outputHeader = strings.Contains(os.Args[2], "h")
-	outputPlanets = strings.Contains(os.Args[2], "p")
-	outputBuildings = strings.Contains(os.Args[2], "b")
-	outputTech = strings.Contains(os.Args[2], "t")
-	outputFleets = strings.Contains(os.Args[2], "f")
-	outputShips = strings.Contains(os.Args[2], "s")
-
-	if outputHeader {
+	if OutputHeader {
 		fmt.Println(structs.ReadHeader(f))
 	}
 
-	if outputFleets {
+	if OutputFleets {
 		numFleets := reader.Btoi(reader.ReadNAt(f, 2, structs.NumFleetsOffset))
 
 		_, err = f.Seek(structs.FleetsOffset, 0)
@@ -78,7 +80,7 @@ func main() {
 		}
 	}
 
-	if outputShips {
+	if OutputShips {
 		numShips := reader.Btoi(reader.ReadNAt(f, 2, structs.NumShipsOffset))
 
 		_, err = f.Seek(structs.ShipsOffset, 0)
@@ -96,7 +98,7 @@ func main() {
 		panic(err)
 	}
 
-	if outputPlanets {
+	if OutputPlanets {
 		planets := []structs.Planet{}
 		for i := 0; i < structs.NumPlanets; i++ {
 			planets = append(planets, structs.ReadPlanet(f))
@@ -111,7 +113,7 @@ func main() {
 		}
 	}
 
-	if outputBuildings {
+	if OutputBuildings {
 		f.Seek(structs.BuildingNumberOffset, 0)
 		numberOfBuildings := reader.Btoi(reader.ReadN(f, 2))
 		fmt.Printf("\nNumber of Buildings: %d\n", numberOfBuildings)
@@ -139,7 +141,7 @@ func main() {
 		}
 	}
 
-	if outputTech {
+	if OutputTech {
 		f.Seek(structs.TechnologyOffset, 0)
 		technologies := []structs.Technology{}
 		for i := 0; i < structs.NumTechnologies; i++ {
