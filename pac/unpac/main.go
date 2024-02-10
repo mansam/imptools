@@ -38,10 +38,11 @@ func main() {
 
 	for i := 0; i < entries; i++ {
 		entry := pac.ReadHeaderEntry(f)
-		fmt.Println(entry.String())
-		err = pac.Unpack(f, entry)
+		fmt.Println("\t", entry)
+		err = pac.Unpack(f, entry, outpath)
 		if err != nil {
 			panic(err)
 		}
 	}
+	fmt.Printf("%d files unpacked successfully.\n", entries)
 }

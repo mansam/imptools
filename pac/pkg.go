@@ -6,7 +6,10 @@ import (
 	"fmt"
 	"github.com/mansam/imptools/reader"
 	"os"
+	"path"
 )
+
+const HeaderEntryLength = 20
 
 // A HeaderEntry is 20 bytes
 type HeaderEntry struct {
@@ -30,8 +33,8 @@ func ReadHeaderEntry(f *os.File) (h HeaderEntry) {
 	return
 }
 
-func Unpack(f *os.File, h HeaderEntry) (err error) {
-	out, err := os.Create(string(h.Filename[:h.FilenameLength]))
+func Unpack(f *os.File, h HeaderEntry, dir string) (err error) {
+	out, err := os.Create(path.Join(dir, string(h.Filename[:h.FilenameLength])))
 	if err != nil {
 		return
 	}

@@ -62,6 +62,9 @@ func main() {
 		os.Exit(1)
 	}
 
+	// offset the data region by the 2 bytes for the number of entries, plus
+	// the number of entries * 20 bytes to account for the header.
+	dataOffset := fileEntries*pac.HeaderEntryLength + 2
 	var headers []pac.HeaderEntry
 	var data []byte
 	for _, entry := range entries {
@@ -84,7 +87,7 @@ func main() {
 		header.FilenameLength = byte(nameLength)
 		header.Filename = nameBytes
 		header.Length = uint16(len(bytes))
-		header.Offset = uint32(len(data))
+		header.Offset = uint32(len(data) + dataOffset)
 		data = append(data, bytes...)
 		headers = append(headers, header)
 	}
@@ -92,13 +95,14 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+	fmt.Printf("Entries: %d\n", len(headers))
 	for _, header := range headers {
 		err = pac.WriteHeaderEntry(header, outfile)
 		if err != nil {
 			panic(err)
 		}
+		fmt.Println("\t", header)
 	}
-	fmt.Printf("Wrote %d header entries.\n", len(headers))
 	n, err := outfile.Write(data)
 	if err != nil {
 		panic(err)
@@ -107,5 +111,5 @@ func main() {
 		fmt.Printf("Only wrote %d of %d data bytes.\n", n, len(data))
 		os.Exit(1)
 	}
-	fmt.Printf("%d files packed successfully.", len(headers))
+	fmt.Printf("%d files packed successfully.\n", len(headers))
 }
