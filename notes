@@ -49,7 +49,7 @@ C0 5D 00 00 00 96 00 00 00 01 A0 0F 00 00 F4 01 63 00 01 01 01 01 01 01 01
 
 1 Byte: Length of savefile name (max 26)
 26 Bytes: Savefile name
-1 Byte: null terminator?
+1 Byte: null terminator? (2/9/2024-- probably the difficulty flag, haven't verified yet)
 2 Bytes: Rank (0-5)
 2 Bytes: Year
 2 Bytes: Month
