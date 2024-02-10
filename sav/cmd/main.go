@@ -56,7 +56,7 @@ func main() {
 
 		fmt.Printf("%-3s %-12s %-16s %-4s %-4s %-4s %-4s %-4s %-4s %-4s %-4s %-4s %-4s %-4s %-4s %-4s %-8s %-8s %-8s\n",
 			"#",
-			"Name",
+			"Filename",
 			"Coords",
 			"F1",
 			"F2",
@@ -107,7 +107,7 @@ func main() {
 			return planets[i].Name() < planets[j].Name()
 		})
 
-		fmt.Printf("%-12s \t%-24s \t%-10s \t%-16s \t%-6s \t%-8s \t%-4v \t%-4s \t%-4s\n", "Name", "Owner", "Race", "Coords", "Morale", "Flag", "Vis", "Type", "Map")
+		fmt.Printf("%-12s \t%-24s \t%-10s \t%-16s \t%-6s \t%-8s \t%-4v \t%-4s \t%-4s\n", "Filename", "Owner", "Race", "Coords", "Morale", "Flag", "Vis", "Type", "Map")
 		for _, v := range planets {
 			fmt.Println(v)
 		}
@@ -150,7 +150,7 @@ func main() {
 		fmt.Println("Technologies:")
 		fmt.Printf(
 			"%-18s \t%-7s \t%-7s\n",
-			"Name",
+			"Filename",
 			"Unknown1",
 			"Unknown4",
 		)

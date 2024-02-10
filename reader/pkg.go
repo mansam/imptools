@@ -6,24 +6,6 @@ import (
 	"os"
 )
 
-func Unpack(f *os.File, path string, n, offset int) {
-	out, err := os.Create(path)
-	if err != nil {
-		panic(err)
-	}
-	defer out.Close()
-	buf := ReadNAt(f, n, offset)
-	written, err := out.Write(buf)
-	if err != nil {
-		panic(err)
-	}
-	if written != n {
-		err = errors.New(fmt.Sprintf("couldn't write %d bytes (wrote %d bytes)", n, written))
-		panic(err)
-	}
-
-}
-
 func Btoi(b []byte) (x int) {
 	factor := 1
 	for i := 0; i < len(b); i++ {

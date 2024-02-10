@@ -1,4 +1,2 @@
 .idea/
-sav/cmd/main
-sav/cmd/sav
-unpac/cmd/main
+bin/

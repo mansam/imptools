@@ -2,9 +2,9 @@ package main
 
 import (
 	"fmt"
+	"github.com/mansam/imptools/pac"
 	"github.com/mansam/imptools/reader"
 	"os"
-	"path"
 )
 
 func main() {
@@ -37,13 +37,11 @@ func main() {
 	fmt.Printf("Entries: %d\n", entries)
 
 	for i := 0; i < entries; i++ {
-		buf = reader.ReadN(f, 1)
-		nameLen := int(buf[0])
-		buf = reader.ReadN(f, 13)
-		packedName := string(buf[:nameLen])
-		packedLength := reader.Btoi(reader.ReadN(f, 2))
-		packedOffset := reader.Btoi(reader.ReadN(f, 4))
-		fmt.Printf("%d %s %d %d\n", nameLen, packedName, packedLength, packedOffset)
-		reader.Unpack(f, path.Join(outpath, packedName), packedLength, packedOffset)
+		entry := pac.ReadHeaderEntry(f)
+		fmt.Println(entry.String())
+		err = pac.Unpack(f, entry)
+		if err != nil {
+			panic(err)
+		}
 	}
 }
