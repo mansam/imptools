@@ -27,6 +27,9 @@ func main() {
 	var badNames []string
 	var anticipatedSize int64
 	var fileEntries int
+	// offset the data region by the 2 bytes for the number of entries, plus
+	// the number of entries * 20 bytes to account for the header.
+	dataOffset := fileEntries*pac.HeaderEntryLength + 2
 	for _, entry := range entries {
 		if entry.IsDir() {
 			// only pack files in the root
@@ -42,7 +45,7 @@ func main() {
 		anticipatedSize += fileInfo.Size()
 		fileEntries++
 	}
-	if fileEntries > math.MaxUint16 || len(badNames) > 0 || anticipatedSize > math.MaxUint32 {
+	if fileEntries > math.MaxUint16 || len(badNames) > 0 || (anticipatedSize+int64(dataOffset)) > math.MaxUint32 {
 		if len(badNames) > 0 {
 			println("Filenames too long to pac:")
 			for _, name := range badNames {
@@ -54,7 +57,7 @@ func main() {
 			println("\t Total number of files: ", fileEntries)
 			println("\t Overage: ", fileEntries-math.MaxUint16)
 		}
-		if anticipatedSize > math.MaxUint32 {
+		if (anticipatedSize + int64(dataOffset)) > math.MaxUint32 {
 			println("Total length of packed archive would exceed uint32:")
 			println("\tTotal anticipated size: ", anticipatedSize)
 			println("\tOverage: ", anticipatedSize-math.MaxUint32)
@@ -62,9 +65,6 @@ func main() {
 		os.Exit(1)
 	}
 
-	// offset the data region by the 2 bytes for the number of entries, plus
-	// the number of entries * 20 bytes to account for the header.
-	dataOffset := fileEntries*pac.HeaderEntryLength + 2
 	var headers []pac.HeaderEntry
 	var data []byte
 	for _, entry := range entries {
