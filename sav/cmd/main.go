@@ -2,12 +2,13 @@ package main
 
 import (
 	"fmt"
-	"github.com/mansam/imptools/reader"
-	"github.com/mansam/imptools/sav/labels"
-	"github.com/mansam/imptools/sav/structs"
 	"os"
 	"sort"
 	"strings"
+
+	"github.com/mansam/imptools/reader"
+	"github.com/mansam/imptools/sav/labels"
+	"github.com/mansam/imptools/sav/structs"
 )
 
 // Flags
@@ -19,6 +20,7 @@ var (
 	OutputTech      bool
 	OutputFleets    bool
 	OutputShips     bool
+	OutputMessages  bool
 )
 
 // Read IG save files.
@@ -33,6 +35,7 @@ func main() {
 	OutputTech = strings.Contains(os.Args[2], "t")
 	OutputFleets = strings.Contains(os.Args[2], "f")
 	OutputShips = strings.Contains(os.Args[2], "s")
+	OutputMessages = strings.Contains(os.Args[2], "m")
 
 	f, err := os.Open(SaveFile)
 	if err != nil {
@@ -118,6 +121,7 @@ func main() {
 		buildings := []structs.Building{}
 		for i := 0; i < numberOfBuildings; i++ {
 			buildings = append(buildings, structs.ReadBuilding(f))
+			// one byte gap between buildings
 			f.Seek(1, 1)
 		}
 		fmt.Printf("%-12s %-25s %-20s %-10s %-9s %-9s %-9s %-9s %-10s %-12s %-9s %-9s %-9s\n",
@@ -154,6 +158,17 @@ func main() {
 		)
 		for i, v := range technologies {
 			fmt.Printf("%-18s \t%s\n", labels.TechnologyName(uint8(i+1)), v.String())
+		}
+	}
+
+	if OutputMessages {
+		f.Seek(structs.SpecialMessageOffset, 0)
+		special := structs.ReadSpecialMessage(f)
+		fmt.Printf("%d: %s\n", special.Length, special)
+		f.Seek(structs.ScrollingMessageOffset, 0)
+		for i := 0; i < structs.NumMessages; i++ {
+			message := structs.ReadScrollingMessage(f)
+			fmt.Printf("%d: %s$\n", message.Length, message)
 		}
 	}
 }

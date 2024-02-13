@@ -14,6 +14,13 @@ const NumTechnologies = 120
 const ShipsOffset = 0x2261
 const FleetsOffset = 0xea53
 
+const TrailerSaveGameNameLengthOffset = 0x23e61
+const SpecialMessageOffset = 0x23ea9
+const SpecialMessageSize = 0x67
+const NumMessages = 10
+const MessageSize = 0x4c
+const ScrollingMessageOffset = 0x23f10
+
 // const NumShipsOffset = 0x0f58
 const NumShipsOffset = 0x2259
 const NumFleetsOffset = 0x225b

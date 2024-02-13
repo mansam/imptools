@@ -3,8 +3,9 @@ package structs
 import (
 	"encoding/binary"
 	"fmt"
-	"github.com/mansam/imptools/sav/labels"
 	"os"
+
+	"github.com/mansam/imptools/sav/labels"
 )
 
 // Offset: 0xEA53 (93 bytes)
@@ -17,7 +18,7 @@ type Fleet struct {
 	Controllable  uint8
 	Visible       uint8
 	Alert         uint8
-	Unknown0      [4]byte
+	Unknown0      [2]byte
 	X             uint16
 	Unknown1      uint16
 	Y             uint16
