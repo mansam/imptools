@@ -1,5 +1,24 @@
 package labels
 
+func Order(o uint8) string {
+	var order = []string{
+		"",
+		"Move to",
+		"Attack",
+		"Guarding",
+	}
+	return order[o]
+}
+
+func OrderTarget(o uint8) string {
+	var target = []string{
+		"Deep Space",
+		"Planet",
+		"Fleet",
+	}
+	return target[o]
+}
+
 func Difficulty(d uint8) string {
 	var difficulty = []string{
 		"Normal",
@@ -123,6 +142,10 @@ func BuildingName(b uint8) string {
 		"Stadium",
 	}
 	return buildings[b]
+}
+
+func PlanetType(p uint8) string {
+	return ""
 }
 
 func PlanetName(p uint8) string {

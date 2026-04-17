@@ -1,0 +1,71 @@
+namelength: 12
+name_:
+  - 71
+  - 97
+  - 114
+  - 103
+  - 115
+  - 108
+  - 97
+  - 110
+  - 32
+  - 102
+  - 108
+  - 116
+owner: 2
+color: 0
+unk0:
+  - 7
+control: 0
+active: 1
+visible: 1
+alert: 0
+unk1:
+  - 0
+  - 86
+x: 757
+unk2:
+  - 0
+  - 196
+"y": 743
+unk3: 0
+speed: 35
+order: 2
+target: 1
+index1: 27
+index2: 0
+near: 0
+u5a: 66
+u5b: 0
+u5c: 0
+fighter1: 70
+fighter2: 0
+fighter3: 0
+fighter4: 0
+fighter5: 0
+fighter6: 0
+tank1: 0
+tank2: 8
+tank3: 8
+tank4: 5
+unused:
+  - 0
+  - 0
+  - 0
+  - 0
+car1: 4
+car2: 0
+car3: 5
+totalfighters: 70
+totalvehicles: 30
+fleetpower: 240
+groundpower: 75
+maxvehicles: 57
+flagships: 3
+totalships: 28
+unk9: 0
+radar: 3
+unk10:
+  - 3
+  - 3
+  - 3

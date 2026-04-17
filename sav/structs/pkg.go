@@ -25,6 +25,9 @@ const ScrollingMessageOffset = 0x23f10
 const NumShipsOffset = 0x2259
 const NumFleetsOffset = 0x225b
 
+// Flags
+const DifficultyOffset = 0x24694
+
 // technology name indices
 const (
 	TechFighters         = 0
@@ -47,3 +50,5 @@ const (
 	TechPlanetaryRadars  = 106
 	TechPlanetaryGuns    = 114
 )
+
+type FixedString []byte

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/mansam/imptools/reader"
 	"github.com/mansam/imptools/sav/labels"
 )
 
@@ -14,15 +15,25 @@ type Fleet struct {
 	Name_         [12]byte
 	Owner         uint8
 	Color         uint8 // affects appearance of empire ships (yellow w/ blue, yellow /w red, etc)
-	Unknown       [2]byte
-	Controllable  uint8
+	Unk0          [1]byte
+	Control       uint8
+	Active        uint8
 	Visible       uint8
-	Alert         uint8
-	Unknown0      [2]byte
+	Alert         uint8 // red box
+	Unk1          [2]byte
 	X             uint16
-	Unknown1      uint16
+	Unk2          [2]byte
 	Y             uint16
-	Unknown2      [18]byte
+	Unk3          uint8
+	Speed         byte // calculated display value
+	Order         uint8
+	Target        uint8
+	Index1        uint32
+	Index2        uint32
+	Near          uint16
+	U5a           uint8
+	U5b           uint8
+	U5c           uint16
 	Fighter1      int16
 	Fighter2      int16
 	Fighter3      int16
@@ -37,22 +48,36 @@ type Fleet struct {
 	Car1          int16
 	Car2          int16
 	Car3          int16
-	TotalFighters int16 // (calculated)
-	TotalVehicles int16 // (calculated)
-	Unknown3      int16
-	Unknown4      int16
-	Unknown5      int16
-	Unknown6      int16
-	Unknown7      [5]byte
+	TotalFighters int16  // (calculated)
+	TotalVehicles int16  // (calculated)
+	FleetPower    uint16 // fighters are worth their level, cruiser/destroyer worth 5, flagship worth 15 (dargslan cruisers worth 7, flagships worth 20)
+	GroundPower   uint16 // tanks and cars are worth their tech level, radar cars are worth 0
+	MaxVehicles   uint16
+	Flagships     uint8
+	TotalShips    uint8
+	Unk9          uint8
+	Radar         uint8
+	Unk10         [3]byte // unknown, apparently fixed values of 030303
 }
 
 func (r Fleet) Name() string {
 	return string(r.Name_[:r.NameLength])
 }
 
+func (r Fleet) Orders(planets []any, fleets []any) any {
+	if r.Target == 0 {
+		return fmt.Sprintf("%s %s %d %d", labels.Order(r.Order), labels.OrderTarget(r.Target), r.Index1, r.Index2)
+	} else if r.Target == 1 {
+		return fmt.Sprintf("%s %s %s", labels.Order(r.Order), labels.OrderTarget(r.Target), planets[r.Index1-1].(Planet).Name())
+	} else if r.Target == 2 {
+		return fmt.Sprintf("%s %s %s", labels.Order(r.Order), labels.OrderTarget(r.Target), fleets[r.Index1-1].(Fleet).Name())
+	}
+	return "unknown orders"
+}
+
 func (r Fleet) String() string {
 	coords := fmt.Sprintf("(%d, %d)", r.X, r.Y)
-	return fmt.Sprintf("%-12s %-16s %-4d %-4d %-4d %-4d %-4d %-4d %-4d %-4d %-4d %-4d %-4d %-4d %-4d %-8d %-8d %-4d",
+	return fmt.Sprintf("%-12s %-16s %-4d %-4d %-4d %-4d %-4d %-4d %-4d %-4d %-4d %-4d %-4d %-4d %-4d %-8d %-8d",
 		r.Name(),
 		coords,
 		r.Fighter1,
@@ -69,8 +94,7 @@ func (r Fleet) String() string {
 		r.Car2,
 		r.Car3,
 		r.TotalFighters,
-		r.TotalVehicles,
-		r.Unknown5)
+		r.TotalVehicles)
 }
 
 // Offset: 0x2261 (51 bytes)
@@ -246,6 +270,15 @@ func ReadShip(f *os.File) (s Ship) {
 func ReadFleet(f *os.File) (flt Fleet) {
 	_ = binary.Read(f, binary.LittleEndian, &flt)
 	return
+}
+
+func WriteFleet(flt Fleet, f *os.File) (err error) {
+	err = binary.Write(f, binary.LittleEndian, flt)
+	return
+}
+
+func FleetCount(f *os.File) int {
+	return reader.Btoi(reader.ReadNAt(f, 2, NumFleetsOffset))
 }
 
 /*

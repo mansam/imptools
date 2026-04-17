@@ -1,3 +1,5 @@
+All strings are Pascal strings (first byte is length of remainder of string)
+
 Planet bit flags
 244: 11110100
 232: 11101000

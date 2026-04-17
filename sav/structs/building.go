@@ -3,8 +3,9 @@ package structs
 import (
 	"encoding/binary"
 	"fmt"
-	"github.com/mansam/imptools/sav/labels"
 	"os"
+
+	"github.com/mansam/imptools/sav/labels"
 )
 
 // Building - 18 bytes
@@ -54,12 +55,59 @@ func (r Building) String() string {
 		r.Workers)
 }
 
+func (r Building) Fields() (fields []any) {
+	fields = []any{labels.PlanetName(r.Index),
+		labels.Owner(r.Owner),
+		labels.BuildingName(r.Type),
+		fmt.Sprintf("(%d, %d)", r.X, r.Y),
+		r.Powered,
+		r.Repairing,
+		r.Damage,
+		r.Remaining,
+		r.Efficiency,
+		r.Operational,
+		r.Unused,
+		r.Kwh,
+		r.Workers,
+	}
+	return
+}
+
 func WriteBuilding(b Building, f *os.File) (err error) {
 	err = binary.Write(f, binary.LittleEndian, b)
 	return
 }
 
 func ReadBuilding(f *os.File) (b Building) {
+	_ = binary.Read(f, binary.LittleEndian, &b)
+	return
+}
+
+type NamedBuildingDefinition struct {
+	Name string
+	BuildingDefinition
+}
+
+// BuildingDefinition : MAIN.EXE 0xAEB14
+type BuildingDefinition struct {
+	Cost           uint32
+	Priority       uint8 // priority when power is insufficient
+	BuildTime      uint8
+	TechnologySlot [3]byte
+	Resource       byte // which resource it affects (display only)
+	HitPoints      uint16
+	Kwh            uint16
+	Workers        uint16
+	Output         uint16 // in hundreds
+	Buildable      [7]byte
+}
+
+func WriteBuildingDefinition(b BuildingDefinition, f *os.File) (err error) {
+	err = binary.Write(f, binary.LittleEndian, b)
+	return
+}
+
+func ReadBuildingDefinition(f *os.File) (b BuildingDefinition) {
 	_ = binary.Read(f, binary.LittleEndian, &b)
 	return
 }
